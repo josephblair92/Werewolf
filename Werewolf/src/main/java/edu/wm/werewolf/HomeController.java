@@ -8,13 +8,19 @@ import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.wm.werewolf.dao.IGameDAO;
+import edu.wm.werewolf.dao.IKillDAO;
+import edu.wm.werewolf.dao.IPlayerDAO;
+import edu.wm.werewolf.dao.IUserDAO;
 import edu.wm.werewolf.domain.Player;
+import edu.wm.werewolf.service.GameService;
 
 /**
  * Handles requests for the application home page.
@@ -22,7 +28,13 @@ import edu.wm.werewolf.domain.Player;
 @Controller
 public class HomeController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	@Autowired private GameService gameService;
+	@Autowired private IPlayerDAO playerDAO;
+	@Autowired private IUserDAO userDAO;
+	@Autowired private IKillDAO killDAO;
+	@Autowired private IGameDAO gameDAO;
+	
+	public static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -43,11 +55,8 @@ public class HomeController {
 	
 	@RequestMapping(value = "/players/alive", method = RequestMethod.GET)
 	public @ResponseBody List<Player> getAllAlive() {
-		
-		List<Player> players = new ArrayList<Player>();
-		players.add(new Player("abcde", false, 37.754, -77.3825, "fghijkl", false));
+		List<Player> players = playerDAO.getAllAlive();
 		return players;
-		
 	}
 	
 }

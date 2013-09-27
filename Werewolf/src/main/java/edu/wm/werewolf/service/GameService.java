@@ -1,5 +1,6 @@
 package edu.wm.werewolf.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,17 @@ import edu.wm.werewolf.domain.Player;
 
 public class GameService {
 	
-	@Autowired private IPlayerDAO playerDao;
+	@Autowired private IPlayerDAO playerDAO;
 	@Autowired private IUserDAO userDao;
 	@Autowired private IKillDAO killDao;
 	@Autowired private IGameDAO gameDao;
 	
 	public List<Player> getAllAlive() {
-		return playerDao.getAllAlive();
+		
+//		List<Player> players = new ArrayList<Player>();
+//		players.add(new Player("edcba", false, 37.754, -77.3825, "fghijkl", false));
+//		return players;
+		return playerDAO.getAllAlive();
 	}
 	
 /*	
