@@ -47,7 +47,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 		
 		try {
 			if (r.next())
-				return new Player(r.getString("id"), r.getBoolean("is_dead"), r.getDouble("lat"), r.getDouble("lng"), r.getString("userid"), r.getBoolean("is_werewolf"), r.getString("voted_for"), r.getDate("last_update"));
+				return new Player(r.getString("id"), r.getBoolean("is_dead"), r.getDouble("lat"), r.getDouble("lng"), r.getString("username"), r.getBoolean("is_werewolf"), r.getString("voted_for"), r.getDate("last_update"));
 			else
 				throw new PlayerNotFoundException();
 		}
@@ -106,7 +106,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 		
 		try {
 			while (r.next())	
-				players.add(new Player(r.getString("id"), r.getBoolean("is_dead"), r.getDouble("lat"), r.getDouble("lng"), r.getString("userid"), r.getBoolean("is_werewolf"), r.getString("voted_for"), r.getDate("last_update")));
+				players.add(new Player(r.getString("id"), r.getBoolean("is_dead"), r.getDouble("lat"), r.getDouble("lng"), r.getString("username"), r.getBoolean("is_werewolf"), r.getString("voted_for"), r.getDate("last_update")));
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -119,7 +119,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 	public void insertPlayer(Player p) {
 		
 		Connection connection = establishConnection();
-		execQuery(connection, "insert into player (userid, is_werewolf) values ('" + p.getUserID() + "'," + p.isWerewolf() + ");");
+		execQuery(connection, "insert into player (username, is_werewolf, is_dead) values ('" + p.getUserID() + "'," + p.isWerewolf() + ", false);");
 		
 	}
 
@@ -127,7 +127,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 	public void move(Player p, GPSLocation loc) {
 		
 		Connection connection = establishConnection();
-		DateFormat df = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		execQuery(connection, "update player set lat=" + loc.getLat() + ", lng=" + loc.getLng() + ", last_update='" + df.format(Calendar.getInstance().getTime()) + "' where id=" + p.getId() + ";");
 		
 	}
@@ -135,7 +135,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 	public void moveByUsername(String username, GPSLocation loc) {
 		
 		Connection connection = establishConnection();
-		DateFormat df = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		execQuery(connection, "update player set lat=" + loc.getLat() + ", lng=" + loc.getLng() + ", last_update='" + df.format(Calendar.getInstance().getTime()) + "' where username='" + username + "';");
 		
 	}
@@ -160,7 +160,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 	public void deleteAllPlayers() {
 
 		Connection connection = establishConnection();
-		execQuery(connection, "delete from player");
+		execQuery(connection, "delete from player;");
 		
 	}
 
@@ -174,7 +174,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 		
 		try {
 			while (r.next())	
-				players.add(new Player(r.getString("id"), r.getBoolean("is_dead"), r.getDouble("lat"), r.getDouble("lng"), r.getString("userid"), r.getBoolean("is_werewolf"), r.getString("voted_for"), r.getDate("last_update")));
+				players.add(new Player(r.getString("id"), r.getBoolean("is_dead"), r.getDouble("lat"), r.getDouble("lng"), r.getString("username"), r.getBoolean("is_werewolf"), r.getString("voted_for"), r.getDate("last_update")));
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -229,7 +229,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 		
 		try {
 			if (r.next())
-				return new Player(r.getString("id"), r.getBoolean("is_dead"), r.getDouble("lat"), r.getDouble("lng"), r.getString("userid"), r.getBoolean("is_werewolf"), r.getString("voted_for"), r.getDate("last_update"));
+				return new Player(r.getString("id"), r.getBoolean("is_dead"), r.getDouble("lat"), r.getDouble("lng"), r.getString("username"), r.getBoolean("is_werewolf"), r.getString("voted_for"), r.getDate("last_update"));
 			else
 				throw new PlayerNotFoundException();
 		}

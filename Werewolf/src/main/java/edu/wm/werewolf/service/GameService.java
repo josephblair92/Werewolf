@@ -28,7 +28,7 @@ public class GameService {
 	@Autowired private IUserDAO userDAO;
 	@Autowired private IKillDAO killDAO;
 	@Autowired private IGameDAO gameDAO;
-	private String activeGameID;
+	private String activeGameID = "12";
 	private int scentRadius = 800;
 	private int killRadius = 500;
 	
@@ -195,7 +195,7 @@ public class GameService {
 			int index;
 			
 			do {
-				index = (int)((Math.random() * users.size()) + 1);
+				index = (int)((Math.random() * users.size()));
 			} while (players.get(index).isWerewolf());
 			
 			Player p = players.get(index);

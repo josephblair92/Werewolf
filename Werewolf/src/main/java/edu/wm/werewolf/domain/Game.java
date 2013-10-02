@@ -3,6 +3,8 @@ package edu.wm.werewolf.domain;
 import java.util.Calendar;
 import java.util.Date;
 
+import edu.wm.werewolf.HomeController;
+
 public class Game {
 	
 	private Date createdDate;
@@ -48,7 +50,7 @@ public class Game {
 	}
 
 	public boolean atNight() {
-		
+
 		Date now = Calendar.getInstance().getTime();
 		long elapsedMinutes = (now.getTime() - createdDate.getTime()) / 60000;
 		return (elapsedMinutes / dayNightFrequency) % 2 != 0;

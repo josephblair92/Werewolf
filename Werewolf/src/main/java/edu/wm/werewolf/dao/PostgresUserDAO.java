@@ -60,11 +60,11 @@ public class PostgresUserDAO extends PostgresDAO implements IUserDAO {
 		
 		Connection connection = establishConnection();
 		List<User> users = new ArrayList<User>();
-		ResultSet r = execQuery(connection, "select * from user_account");
+		ResultSet r = execQuery(connection, "select * from user_account;");
 		
 		try {
 			while (r.next()) {
-				users.add(new User(r.getString("firstname"), r.getString("lastname"), r.getString("imageurl"), r.getString("hashed_password"), r.getString("username"), r.getInt("score")));
+				users.add(new User(r.getString("first_name"), r.getString("last_name"), r.getString("imageurl"), r.getString("hashed_password"), r.getString("username"), r.getInt("score")));
 			}
 		}
 		catch (SQLException e) {

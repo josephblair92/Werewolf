@@ -1,5 +1,6 @@
 package edu.wm.werewolf;
 
+import java.security.Principal;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +23,7 @@ import edu.wm.werewolf.dao.IGameDAO;
 import edu.wm.werewolf.dao.IKillDAO;
 import edu.wm.werewolf.dao.IPlayerDAO;
 import edu.wm.werewolf.dao.IUserDAO;
+import edu.wm.werewolf.domain.GPSLocation;
 import edu.wm.werewolf.domain.JsonResponse;
 import edu.wm.werewolf.domain.Player;
 import edu.wm.werewolf.domain.Score;
@@ -65,8 +68,9 @@ public class HomeController {
 	
 	@RequestMapping(value = "/players/nearby", method = RequestMethod.GET)
 	public @ResponseBody List<Player> getAllNearby() {
-		logger.info("GET to /players/nearby - getAllNearby()");
-		List<Player> nearbyPlayers = gameService.getAllNearby(null);
+		String username="yoloswag420";
+		logger.info("GET to /players/nearby - getAllNearby(), username: " + username);
+		List<Player> nearbyPlayers = gameService.getAllNearby(username);
 		return nearbyPlayers;
 	}
 	
@@ -85,18 +89,19 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/location", method = RequestMethod.POST)
-	public @ResponseBody JsonResponse updateLocation(@RequestParam("user") String user) {
+	public @ResponseBody JsonResponse updateLocation(@ModelAttribute GPSLocation loc, @ModelAttribute("username") String username) {
 		logger.info("POST to /location - updateLocation()");
-		//JsonResponse response = gameService.updatePosition(null, null);
-		JsonResponse response = new JsonResponse(true, "Test successful");
-		logger.info(user);
+		logger.info(username + " " + loc.getLat() + " " + loc.getLng());
+		JsonResponse response = gameService.updatePosition(username, loc);
+		//JsonResponse response = new JsonResponse(true, "Test successful");
 		return response;
 	}
 	
 	@RequestMapping(value = "/newgame", method = RequestMethod.POST)
-	public @ResponseBody JsonResponse newGame() {
+	public @ResponseBody JsonResponse newGame(@ModelAttribute("username") String username, @ModelAttribute("numMinutes") String numMinutes) {
 		logger.info("POST to /newgame - newGame()");
-		JsonResponse response = gameService.newGame(null, 0);
+		logger.info("username: " + username + " numMinutes: " + numMinutes);
+		JsonResponse response = gameService.newGame(username, Integer.parseInt(numMinutes));
 		return response;
 	}
 	
@@ -118,7 +123,8 @@ public class HomeController {
 		return response;
 	}
 	
-	@RequestMapping(value="/player/{id}", method=RequestMethod.POST)
+	
+	@RequestMapping(value="/players/{id}", method=RequestMethod.POST)
 	public @ResponseBody JsonResponse castVote(@PathVariable int id, Principal principal) {
 	}
 	

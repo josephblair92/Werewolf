@@ -5,6 +5,10 @@ public class GPSLocation {
 	private double lat;
 	private double lng;
 	
+	public GPSLocation() {
+		
+	}
+	
 	public GPSLocation(double lat, double lng) {
 		this.lat = lat;
 		this.lng = lng;

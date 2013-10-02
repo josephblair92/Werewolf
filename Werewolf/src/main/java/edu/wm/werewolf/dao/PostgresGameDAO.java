@@ -4,11 +4,14 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.text.DateFormatter;
 
+import edu.wm.werewolf.HomeController;
 import edu.wm.werewolf.domain.Game;
 import edu.wm.werewolf.domain.Kill;
 import edu.wm.werewolf.exceptions.GameNotFoundException;
@@ -20,14 +23,18 @@ public class PostgresGameDAO extends PostgresDAO implements IGameDAO {
 	public Game getGameByID(String ID) throws GameNotFoundException {
 		Connection connection = establishConnection();
 		ResultSet r = execQuery(connection, "select * from game where id=" + ID +";");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		try {
 			if (r.next())
-				return new Game (r.getString("admin_username"), r.getDate("created_date"), r.getInt("day_night_frequency"), r.getString("id"));
+				return new Game (r.getString("admin_username"), df.parse(r.getString("created_date")), r.getInt("day_night_frequency"), r.getString("id"));
 			else
 				throw new GameNotFoundException();
 		}
 		catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -39,8 +46,8 @@ public class PostgresGameDAO extends PostgresDAO implements IGameDAO {
 	public String newGame(Game g) {
 		
 		Connection connection = establishConnection();
-		DateFormat df = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
-		ResultSet r = execQuery(connection, "insert into game(created_date, frequency, admin_username) values ('" + df.format(g.getCreatedDate()) + "'," + g.getDayNightFrequency() + ", '" + g.getAdmin() + "') returning id;");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		ResultSet r = execQuery(connection, "insert into game(created_date, day_night_frequency, admin_username) values ('" + df.format(g.getCreatedDate()) + "'," + g.getDayNightFrequency() + ", '" + g.getAdmin() + "') returning id;");
 		
 		try {
 			if (r.next())
@@ -65,7 +72,7 @@ public class PostgresGameDAO extends PostgresDAO implements IGameDAO {
 	public void restartGameByID(String ID) {
 		
 		Connection connection = establishConnection();
-		DateFormat df = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		execQuery(connection, "update game set created_date=" + df.format(Calendar.getInstance().getTime()) + " where id =" + ID + ";");
 		
