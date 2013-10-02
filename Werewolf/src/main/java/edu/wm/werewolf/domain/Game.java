@@ -1,5 +1,6 @@
 package edu.wm.werewolf.domain;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Game {
@@ -8,9 +9,10 @@ public class Game {
 	private int dayNightFrequency;
 	private String gameID;
 	private boolean isRunning;
-	private long timer;
+	private String admin;
 	
-	public Game(Date createdDate, int dayNightFrequency, String ID) {
+	public Game(String admin, Date createdDate, int dayNightFrequency, String ID) {
+		this.admin = admin;
 		this.createdDate = createdDate;
 		this.dayNightFrequency = dayNightFrequency;
 		this.setGameID(ID);
@@ -36,6 +38,24 @@ public class Game {
 	public void setGameID(String gameID) {
 		this.gameID = gameID;
 	}
+
+	public String getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(String admin) {
+		this.admin = admin;
+	}
+
+	public boolean atNight() {
+		
+		Date now = Calendar.getInstance().getTime();
+		long elapsedMinutes = (now.getTime() - createdDate.getTime()) / 60000;
+		return (elapsedMinutes / dayNightFrequency) % 2 != 0;
+		
+	}
+	
+	
 	
 	
 

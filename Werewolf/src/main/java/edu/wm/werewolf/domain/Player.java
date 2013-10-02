@@ -1,5 +1,7 @@
 package edu.wm.werewolf.domain;
 
+import java.util.Date;
+
 public class Player {
 
 	private String id;
@@ -8,9 +10,16 @@ public class Player {
 	private double lng;
 	private String userID;
 	private boolean isWerewolf;
+	private String votedFor;
+	private Date lastUpdate;
+	
+	public Player() {
+		this.isDead = false;
+		this.isWerewolf = false;
+	}
 	
 	public Player(String id, boolean isDead, double lat, double lng,
-			String userID, boolean isWerewolf) {
+			String userID, boolean isWerewolf, String votedFor, Date lastUpdate) {
 		super();
 		this.id = id;
 		this.isDead = isDead;
@@ -18,6 +27,8 @@ public class Player {
 		this.lng = lng;
 		this.userID = userID;
 		this.isWerewolf = isWerewolf;
+		this.votedFor = votedFor;
+		this.lastUpdate = lastUpdate;
 	}
 
 	public String getId() {

@@ -2,30 +2,24 @@ package edu.wm.werewolf.domain;
 
 public class User {
 	
-	private String id;
 	private String firstname;
 	private String lastname;
 	private String imageURL;
 	private String hashedPassword;
 	private String username;
+	private int score;
 	
-	public User(String id, String firstname, String lastname, String imageURL,
-			String hashedPassword, String username) {
+	public User(String firstname, String lastname, String imageURL,
+			String hashedPassword, String username, int score) {
 
-		this.id = id;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.imageURL = imageURL;
 		this.hashedPassword = hashedPassword;
 		this.username = username;
+		this.score = score;
 	}
-	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
+
 	public String getFirstname() {
 		return firstname;
 	}
@@ -55,6 +49,12 @@ public class User {
 	}
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	public int getScore() {
+		return score;
+	}
+	public void setScore(int score) {
+		this.score = score;
 	}
 	
 	
