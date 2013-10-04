@@ -74,7 +74,7 @@ public class PostgresGameDAO extends PostgresDAO implements IGameDAO {
 		Connection connection = establishConnection();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		execQuery(connection, "update game set created_date=" + df.format(Calendar.getInstance().getTime()) + " where id =" + ID + ";");
+		execQuery(connection, "update game set created_date='" + df.format(Calendar.getInstance().getTime()) + "' where id='" + ID + "';");
 		
 	}
 

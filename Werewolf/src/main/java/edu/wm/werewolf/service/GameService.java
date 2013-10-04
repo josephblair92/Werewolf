@@ -3,8 +3,10 @@ package edu.wm.werewolf.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,7 +30,7 @@ public class GameService {
 	@Autowired private IUserDAO userDAO;
 	@Autowired private IKillDAO killDAO;
 	@Autowired private IGameDAO gameDAO;
-	private String activeGameID = "12";
+	private String activeGameID = "14";
 	private int scentRadius = 800;
 	private int killRadius = 500;
 	
@@ -90,7 +92,7 @@ public class GameService {
 		
 		Player victim;
 		try {
-			victim = playerDAO.getPlayerByUsername(killerUsername);
+			victim = playerDAO.getPlayerByUsername(victimUsername);
 		} catch (PlayerNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -174,9 +176,6 @@ public class GameService {
 	}
 
 	public JsonResponse newGame(String adminUsername, int dayNightFrequency) {
-
-		Game g = new Game(adminUsername, Calendar.getInstance().getTime(), dayNightFrequency, null);
-		activeGameID = gameDAO.newGame(g);
 		
 		playerDAO.deleteAllPlayers();
 		List<User> users = userDAO.getAllUsers();
@@ -184,35 +183,33 @@ public class GameService {
 		List<Player> players = new ArrayList<Player>();
 		
 		for (int i = 0; i < users.size(); i++) {
-			Player p = new Player(null, false, 999, 999, users.get(i).getUsername(), false, null, null);
+			Player p = new Player();
+			p.setUserID(users.get(i).getUsername());
 			players.add(p);
 		}
 		
-		int numberOfWerewolves = users.size() / 3;
+		Collections.shuffle(players, new Random(System.currentTimeMillis()));
+		int numberOfWerewolves = players.size() / 3;
 		
-		for (int i = 0; i < numberOfWerewolves; i++) {
+		for (int i = 0; i < players.size(); i++) {
 			
-			int index;
-			
-			do {
-				index = (int)((Math.random() * users.size()));
-			} while (players.get(index).isWerewolf());
-			
-			Player p = players.get(index);
-			p.setWerewolf(true);
-			players.set(index, p);
+			if (i < numberOfWerewolves)
+				players.get(i).setWerewolf(true);
+			playerDAO.insertPlayer(players.get(i));
 			
 		}
 		
-		for (int i = 0; i < players.size(); i++)
-			playerDAO.insertPlayer(players.get(i));
+		Game g = new Game(adminUsername, Calendar.getInstance().getTime(), dayNightFrequency, null);
+		activeGameID = gameDAO.newGame(g);
 		
 		JsonResponse r = new JsonResponse(true, "Sucessfully created new game");
 		return r;
 		
 	}
 
-	public JsonResponse restartGame(Game g, String username) {
+	public JsonResponse restartGame(String username) {
+		
+		/*
 		
 		if (!g.getAdmin().equals(username)) {
 			return new JsonResponse(false, "Error: only the admin is allowed to restart the game.");
@@ -242,6 +239,42 @@ public class GameService {
 			playerDAO.setWerewolfByID(werewolfIDs.get(i));
 		}
 		
+		*/
+		
+		Game g;
+		try {
+			g = gameDAO.getGameByID(activeGameID);
+		} catch (GameNotFoundException e) {
+			e.printStackTrace();
+			return new JsonResponse(false, "Error: the specified game was not found.");
+		}
+		
+		if (!g.getAdmin().equals(username)) {
+			return new JsonResponse(false, "Error: only the admin is allowed to restart the game.");
+		}
+		
+		List<String> IDs = playerDAO.getAllIDs();
+		playerDAO.deleteAllPlayers();
+		List<Player> players = new ArrayList<Player>();
+		
+		for (int i = 0; i < IDs.size(); i++) {
+			Player p = new Player();
+			p.setUserID(IDs.get(i));
+			players.add(p);
+		}
+		
+		Collections.shuffle(players, new Random(System.currentTimeMillis()));
+		int numberOfWerewolves = players.size() / 3;
+		
+		for (int i = 0; i < players.size(); i++) {
+			
+			if (i < numberOfWerewolves)
+				players.get(i).setWerewolf(true);
+			playerDAO.insertPlayer(players.get(i));
+			
+		}
+		
+		gameDAO.restartGameByID(g.getGameID());		
 		return new JsonResponse(true, "Successfully restarted the game.");
 	}
 	

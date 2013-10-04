@@ -189,13 +189,13 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 	public List<String> getAllIDs() {
 		
 		Connection connection = establishConnection();
-		ResultSet r = execQuery(connection, "select id from player;");
+		ResultSet r = execQuery(connection, "select username from player;");
 		
 		List<String> IDs = new ArrayList<String>();
 		
 		try {
 			while (r.next())
-				IDs.add(r.getString("id"));
+				IDs.add(r.getString("username"));
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
