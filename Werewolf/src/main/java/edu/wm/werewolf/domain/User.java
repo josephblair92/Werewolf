@@ -19,6 +19,11 @@ public class User {
 		this.username = username;
 		this.score = score;
 	}
+	
+	public User(String username, String password) {
+		this.username=username;
+		this.hashedPassword=password;
+	}
 
 	public String getFirstname() {
 		return firstname;

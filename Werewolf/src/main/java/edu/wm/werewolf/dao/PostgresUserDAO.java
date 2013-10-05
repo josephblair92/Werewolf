@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import edu.wm.werewolf.domain.Player;
 import edu.wm.werewolf.domain.Score;
 import edu.wm.werewolf.domain.User;
@@ -29,16 +31,16 @@ public class PostgresUserDAO extends PostgresDAO implements IUserDAO {
 	}
 
 	@Override
-	public User getUserByUsername(String username) throws UserNotFoundException {
+	public User getUserByUsername(String username) throws UsernameNotFoundException {
 		
 		Connection connection = establishConnection();
-		ResultSet r = execQuery(connection, "select * from user_account where username=" + username + ";");
+		ResultSet r = execQuery(connection, "select * from user_account where username='" + username + "';");
 		
 		try {
 			if (r.next())
 				return new User(r.getString("first_name"), r.getString("last_name"), r.getString("imageurl"), r.getString("hashed_password"), r.getString("username"), r.getInt("score"));
 			else
-				throw new UserNotFoundException();
+				throw new UsernameNotFoundException(username);
 		}
 		catch (SQLException e) {
 			e.printStackTrace();

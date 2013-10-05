@@ -29,6 +29,7 @@ import edu.wm.werewolf.domain.JsonResponse;
 import edu.wm.werewolf.domain.Player;
 import edu.wm.werewolf.domain.Score;
 import edu.wm.werewolf.service.GameService;
+import edu.wm.werewolf.service.IUserService;
 
 /**
  * Handles requests for the application home page.
@@ -41,6 +42,7 @@ public class HomeController {
 	@Autowired private IUserDAO userDAO;
 	@Autowired private IKillDAO killDAO;
 	@Autowired private IGameDAO gameDAO;
+	@Autowired private IUserService userService;
 	
 	public static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
@@ -131,6 +133,12 @@ public class HomeController {
 		//logger.info("POST to /restartgame - restartGame()");
 		JsonResponse response = gameService.restartGame(username);
 		return response;
+	}
+	
+	@RequestMapping(value = "/newuser", method = RequestMethod.POST)
+	public @ResponseBody JsonResponse newUser(@ModelAttribute("username") String username, @ModelAttribute("password") String password) {
+		userService.createUser(username, password);
+		return new JsonResponse(true, "Successfully added new user");
 	}
 
 	

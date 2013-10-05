@@ -19,6 +19,7 @@
 	<bean id="userDAO" class="edu.wm.werewolf.dao.PostgresUserDAO" />
 	<bean id="killDAO" class="edu.wm.werewolf.dao.PostgresKillDAO" />
 	<bean id="gameDAO" class="edu.wm.werewolf.dao.PostgresGameDAO" />
+	<bean id="userService" class="edu.wm.werewolf.service.UserServiceImpl"/>
 		
 </beans>
 
