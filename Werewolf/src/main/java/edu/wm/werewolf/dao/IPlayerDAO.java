@@ -13,8 +13,8 @@ public interface IPlayerDAO {
 	Player getPlayerByID(String ID) throws PlayerNotFoundException;
 	List<Player> getAllPlayers();
 	List<Player> getAllAlive();
-	List<Player> getAllWerewolves();
-	List<Player> getAllTownspeople();
+	//List<Player> getAllWerewolves();
+	//List<Player> getAllTownspeople();
 	List<Player> getAllNear(GPSLocation loc, int distance);
 	List<String> getAllIDs();
 	void insertPlayer(Player p);
@@ -27,7 +27,9 @@ public interface IPlayerDAO {
 	void setWerewolfByID(String ID);
 	Player getPlayerByUsername(String username) throws PlayerNotFoundException;
 	double getDistanceBetween(Player first, Player second) throws PlayerNotFoundException, SQLException;
-	void voteFor(Player voter, Player votingFor);
+	void vote(Player voter, Player votingFor);
 	void logVotes() throws SQLException, NoRemainingPlayersException;
+	List<Player> getAliveWerewolves() throws SQLException;
+	List<Player> getAliveTownspeople() throws SQLException;
 
 }

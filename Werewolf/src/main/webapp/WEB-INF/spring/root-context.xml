@@ -14,6 +14,10 @@
 	<context:annotation-config/>
 	<mvc:annotation-driven/>
 	
+	<task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>
+	<task:executor id="myExecutor" pool-size="5"/>
+	<task:scheduler id="myScheduler" pool-size="10"/>
+	
 	<bean id="gameService" class="edu.wm.werewolf.service.GameService" />
 	<bean id="playerDAO" class="edu.wm.werewolf.dao.PostgresPlayerDAO" />
 	<bean id="userDAO" class="edu.wm.werewolf.dao.PostgresUserDAO" />
@@ -22,11 +26,3 @@
 	<bean id="userService" class="edu.wm.werewolf.service.UserServiceImpl"/>
 		
 </beans>
-
-
-<!-- 
-<task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>
-<task:executor id="myExecutor" pool-size"5"/>
-<task:scheduler id="myScheduler" pool-size"10"/>
-@Scheduled(fixedDelay=5000) in GameService - checkGameOperation() in GameService
--->

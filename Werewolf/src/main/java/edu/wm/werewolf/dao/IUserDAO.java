@@ -16,6 +16,6 @@ public interface IUserDAO {
 	User getUserByUsername(String username) throws UsernameNotFoundException;
 	List<User> getAllUsers();
 	List<Score> getScores();
-	void logWin(List<User> users);
+	void logWin(User u);
 
 }

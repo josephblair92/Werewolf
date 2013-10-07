@@ -9,6 +9,10 @@ public class User {
 	private String username;
 	private int score;
 	
+	public User() {
+		
+	}
+	
 	public User(String firstname, String lastname, String imageURL,
 			String hashedPassword, String username, int score) {
 

@@ -100,11 +100,10 @@ public class PostgresUserDAO extends PostgresDAO implements IUserDAO {
 	}
 
 	@Override
-	public void logWin(List<User> users) {
+	public void logWin(User u) {
 
 		Connection connection = establishConnection();
-		for (int i = 0; i < users.size(); i++)
-			execQuery(connection, "update user set score=score+1 where username=" + users.get(i).getUsername());
+		execQuery(connection, "update user set score=score+1 where username='" + u.getUsername());
 		
 	}
 

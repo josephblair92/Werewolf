@@ -58,6 +58,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 		return null;
 	}
 
+	/*
 	@Override
 	public List<Player> getAllWerewolves() {
 		
@@ -95,7 +96,8 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 		
 		return players;
 	}
-
+*/
+	
 	@Override
 	public List<Player> getAllNear(GPSLocation loc, int distance) {
 		
@@ -279,7 +281,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 	}
 
 	@Override
-	public void voteFor(Player voter, Player votingFor) {
+	public void vote(Player voter, Player votingFor) {
 
 		Connection connection = establishConnection();
 		execQuery(connection, "update player set voted_for='" + votingFor.getUserID() + "' where username = '" + voter.getUserID() + "';");
@@ -296,11 +298,42 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 		String username;
 		if (r.next())  {
 			username = r.getString("username");
-			execQuery(connection, "delete from player where username='" + username + "';");
+			execQuery(connection, "update player set is_dead=true where username='" + username + "';");
+			execQuery(connection, "update player set voted_for=null;");
 		}
 		else
 			throw new NoRemainingPlayersException();
 
+	}
+
+	@Override
+	public List<Player> getAliveWerewolves() throws SQLException {
+		
+		Connection connection = establishConnection();
+		ResultSet r = execQuery(connection, "select * from player where is_werewolf=true and is_dead=false;");
+		
+		List<Player> players = new ArrayList<Player>();
+
+		while (r.next())
+			players.add(new Player(r.getString("id"), r.getBoolean("is_dead"), r.getDouble("lat"), r.getDouble("lng"), r.getString("username"), r.getBoolean("is_werewolf"), r.getString("voted_for"), r.getDate("last_update")));
+
+		return players;
+		
+	}
+
+	@Override
+	public List<Player> getAliveTownspeople() throws SQLException {
+		
+		Connection connection = establishConnection();
+		ResultSet r = execQuery(connection, "select * from player where is_werewolf=false and is_dead=false;");
+		
+		List<Player> players = new ArrayList<Player>();
+
+		while (r.next())
+			players.add(new Player(r.getString("id"), r.getBoolean("is_dead"), r.getDouble("lat"), r.getDouble("lng"), r.getString("username"), r.getBoolean("is_werewolf"), r.getString("voted_for"), r.getDate("last_update")));
+
+		return players;
+		
 	}
 
 

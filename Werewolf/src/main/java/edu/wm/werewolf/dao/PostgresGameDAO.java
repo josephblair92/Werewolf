@@ -43,21 +43,11 @@ public class PostgresGameDAO extends PostgresDAO implements IGameDAO {
 	}
 
 	@Override
-	public String newGame(Game g) {
+	public void newGame(Game g) {
 		
 		Connection connection = establishConnection();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		ResultSet r = execQuery(connection, "insert into game(created_date, day_night_frequency, admin_username) values ('" + df.format(g.getCreatedDate()) + "'," + g.getDayNightFrequency() + ", '" + g.getAdmin() + "') returning id;");
-		
-		try {
-			if (r.next())
-				return r.getString("id");
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return null;
+		execQuery(connection, "insert into game(created_date, day_night_frequency, admin_username) values ('" + df.format(g.getCreatedDate()) + "'," + g.getDayNightFrequency() + ",'" + g.getAdmin() + "');");
 		
 	}
 
@@ -69,12 +59,16 @@ public class PostgresGameDAO extends PostgresDAO implements IGameDAO {
 		
 	}
 	
-	public void restartGameByID(String ID) {
+	public Game restartGameByID(String ID) throws SQLException, ParseException, GameNotFoundException {
 		
-		Connection connection = establishConnection();
+		Connection connection = establishConnection();	
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
-		execQuery(connection, "update game set created_date='" + df.format(Calendar.getInstance().getTime()) + "' where id='" + ID + "';");
+		ResultSet r = execQuery(connection, "update game set created_date='" + df.format(Calendar.getInstance().getTime()) + "' where id='" + ID + "' returning *;");
+
+		if (r.next())
+			return new Game (r.getString("admin_username"), df.parse(r.getString("created_date")), r.getInt("day_night_frequency"), r.getString("id"));
+		else
+			throw new GameNotFoundException();
 		
 	}
 
