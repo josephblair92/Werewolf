@@ -1,4 +1,3 @@
-/*
 package launch;
 
 import java.io.File;
@@ -27,4 +26,3 @@ public class Main {
         tomcat.getServer().await();  
     }
 }
-*/
