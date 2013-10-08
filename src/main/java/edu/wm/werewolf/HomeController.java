@@ -86,7 +86,7 @@ public class HomeController {
 	
 	@RequestMapping(value = "/players/scores", method = RequestMethod.GET)
 	public @ResponseBody List<Score> getScores() {
-		logger.info("GET to /scores - getScores()");
+		logger.info("GET request to /scores - getScores()");
 		List<Score> scores = gameService.getScores();
 		return scores;
 	}
