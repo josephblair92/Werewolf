@@ -28,11 +28,11 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	}
 
 	@Override
-	public void createUser(String username, String password) {
+	public boolean createUser(String username, String password) {
 
 		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		User u = new User(username, passwordEncoder.encode(password));
-		userDAO.insertUser(u);
+		return userDAO.insertUser(u);
 		
 	}
 

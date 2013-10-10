@@ -65,12 +65,20 @@ public class HomeController {
 	
 	@RequestMapping(value = "/players/alive", method = RequestMethod.GET)
 	public @ResponseBody List<Player> getAllAlive() {
+		
+		if (!gameService.isActive())
+			return null;
+		
 		List<Player> alivePlayers = gameService.getAllAlive();
 		return alivePlayers;
 	}
 	
 	@RequestMapping(value = "/players/nearby", method = RequestMethod.GET)
 	public @ResponseBody List<Player> getAllNearby(Principal principal) {
+		
+		if (!gameService.isActive())
+			return null;
+		
 		String username = principal.getName();
 		//logger.info("GET to /players/nearby - getAllNearby(), username: " + username);
 		List<Player> nearbyPlayers = gameService.getAllNearby(username);
@@ -79,12 +87,16 @@ public class HomeController {
 	
 	@RequestMapping(value = "/players/votable", method = RequestMethod.GET)
 	public @ResponseBody List<Player> getAllVotable() {
+		
+		if (!gameService.isActive())
+			return null;
+		
 		//logger.info("GET to /players/votable - getAllVotable()");
 		List<Player> votablePlayers = gameService.getAllVotable();
 		return votablePlayers;
 	}
 	
-	@RequestMapping(value = "/players/scores", method = RequestMethod.GET)
+	@RequestMapping(value = "/scores", method = RequestMethod.GET)
 	public @ResponseBody List<Score> getScores() {
 		logger.info("GET request to /scores - getScores()");
 		List<Score> scores = gameService.getScores();
@@ -93,6 +105,9 @@ public class HomeController {
 	
 	@RequestMapping(value="/players/{victimUsername}", method=RequestMethod.POST)
 	public @ResponseBody JsonResponse killOrVote(@PathVariable String victimUsername, @ModelAttribute("action") String action, Principal principal) {
+		
+		if (!gameService.isActive())
+			return new JsonResponse (false, "Error: there is not currently a game in progress.");
 		
 		String username = principal.getName();
 		
@@ -110,6 +125,8 @@ public class HomeController {
 	
 	@RequestMapping(value = "/location", method = RequestMethod.POST)
 	public @ResponseBody JsonResponse updateLocation(@ModelAttribute GPSLocation loc, Principal principal) {
+		if (!gameService.isActive())
+			return new JsonResponse (false, "Error: there is not currently a game in progress.");
 		String username = principal.getName();
 		JsonResponse response = gameService.updatePosition(username, loc);
 		return response;
@@ -117,7 +134,12 @@ public class HomeController {
 	
 	@RequestMapping(value = "/newgame", method = RequestMethod.POST)
 	public @ResponseBody JsonResponse newGame(@ModelAttribute("numMinutes") String numMinutes, Principal principal) {
+		
 		//logger.info("POST to /newgame - newGame()");
+		
+		if (gameService.isActive())
+			return new JsonResponse(false, "You cannot create a new game while another game is running.");
+		
 		if (numMinutes.equals(""))
 			return new JsonResponse(false, "You must specify a the number of minutes for each day/night cycle");
 		
@@ -129,6 +151,10 @@ public class HomeController {
 	
 	@RequestMapping(value = "/restartgame", method = RequestMethod.POST)
 	public @ResponseBody JsonResponse restartGame(Principal principal) {
+		
+		if (!gameService.isActive())
+			return new JsonResponse (false, "Error: there is not currently a game in progress.");
+		
 		String username = principal.getName();
 		//logger.info("POST to /restartgame - restartGame()");
 		JsonResponse response = gameService.restartGame(username);
@@ -137,8 +163,10 @@ public class HomeController {
 	
 	@RequestMapping(value = "/newuser", method = RequestMethod.POST)
 	public @ResponseBody JsonResponse newUser(@ModelAttribute("username") String username, @ModelAttribute("password") String password) {
-		userService.createUser(username, password);
-		return new JsonResponse(true, "Successfully added new user");
+		if (userService.createUser(username, password))
+			return new JsonResponse(true, "Successfully added new user");
+		else
+			return new JsonResponse(false, "Could not create the account.  This username may already be taken.");
 	}
 
 	

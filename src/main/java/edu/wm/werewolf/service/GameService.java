@@ -308,4 +308,8 @@ public class GameService {
 		
 	}
 
+	public boolean isActive() {
+		return activeGame != null;
+	}
+
 }

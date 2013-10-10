@@ -10,7 +10,7 @@ import edu.wm.werewolf.exceptions.UserNotFoundException;
 
 public interface IUserDAO {
 	
-	void insertUser(User u);
+	boolean insertUser(User u);
 	void removeUserByUsername(String username);
 	void setPicture(String filepath);
 	User getUserByUsername(String username) throws UsernameNotFoundException;
