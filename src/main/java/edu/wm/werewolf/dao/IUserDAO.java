@@ -11,11 +11,11 @@ import edu.wm.werewolf.exceptions.UserNotFoundException;
 public interface IUserDAO {
 	
 	boolean insertUser(User u);
-	void removeUserByUsername(String username);
-	void setPicture(String filepath);
+	boolean removeUserByUsername(String username);
+	boolean setPicture(String filepath);
 	User getUserByUsername(String username) throws UsernameNotFoundException;
 	List<User> getAllUsers();
 	List<Score> getScores();
-	void logWin(User u);
+	boolean logWin(User u);
 
 }

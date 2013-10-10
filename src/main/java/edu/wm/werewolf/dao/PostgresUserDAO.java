@@ -20,15 +20,14 @@ public class PostgresUserDAO extends PostgresDAO implements IUserDAO {
 	public boolean insertUser(User u) {
 		
 		Connection connection = establishConnection();
-		ResultSet r = execQuery(connection, "insert into user_account(first_name, last_name, imageurl, hashed_password, username, score) values ('" + u.getFirstname() + "','" + u.getLastname() + "','" + u.getImageURL() + "','" + u.getHashedPassword() + "','" + u.getUsername() + "'," + u.getScore() + ");");
-		return r != null;
+		return execUpdate(connection, "insert into user_account(first_name, last_name, imageurl, hashed_password, username, score) values ('" + u.getFirstname() + "','" + u.getLastname() + "','" + u.getImageURL() + "','" + u.getHashedPassword() + "','" + u.getUsername() + "'," + u.getScore() + ");");
 		
 	}
 
 	@Override
-	public void setPicture(String filepath) {
+	public boolean setPicture(String filepath) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 
 	@Override
@@ -51,10 +50,10 @@ public class PostgresUserDAO extends PostgresDAO implements IUserDAO {
 	}
 
 	@Override
-	public void removeUserByUsername(String username) {
+	public boolean removeUserByUsername(String username) {
 		
 		Connection connection = establishConnection();
-		ResultSet r = execQuery(connection, "delete from user_account where username=" + username + ";");
+		return execUpdate(connection, "delete from user_account where username=" + username + ";");
 		
 	}
 
@@ -101,10 +100,10 @@ public class PostgresUserDAO extends PostgresDAO implements IUserDAO {
 	}
 
 	@Override
-	public void logWin(User u) {
+	public boolean logWin(User u) {
 
 		Connection connection = establishConnection();
-		execQuery(connection, "update user set score=score+1 where username='" + u.getUsername());
+		return execUpdate(connection, "update user set score=score+1 where username='" + u.getUsername());
 		
 	}
 

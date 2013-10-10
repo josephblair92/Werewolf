@@ -74,5 +74,20 @@ public class PostgresDAO {
 
 		
 	}
+	
+	public static boolean execUpdate(Connection con, String query) {
+		try {
+			Statement stmt = con.createStatement();
+			HomeController.logger.info(query);
+			stmt.executeUpdate(query);
+			return true;
+		}
+		catch (SQLException e) {
+			HomeController.logger.info("Query failed: " + e.getMessage());
+			return false;
+		}
+
+		
+	}
 
 }
