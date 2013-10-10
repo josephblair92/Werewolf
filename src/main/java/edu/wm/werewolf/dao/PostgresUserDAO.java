@@ -20,15 +20,8 @@ public class PostgresUserDAO extends PostgresDAO implements IUserDAO {
 	public boolean insertUser(User u) {
 		
 		Connection connection = establishConnection();
-		try {
-			execQuery(connection, "insert into user_account(first_name, last_name, imageurl, hashed_password, username, score) values ('" + u.getFirstname() + "','" + u.getLastname() + "','" + u.getImageURL() + "','" + u.getHashedPassword() + "','" + u.getUsername() + "'," + u.getScore() + ");");
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		
-		return true;
+		ResultSet r = execQuery(connection, "insert into user_account(first_name, last_name, imageurl, hashed_password, username, score) values ('" + u.getFirstname() + "','" + u.getLastname() + "','" + u.getImageURL() + "','" + u.getHashedPassword() + "','" + u.getUsername() + "'," + u.getScore() + ");");
+		return r != null;
 		
 	}
 
