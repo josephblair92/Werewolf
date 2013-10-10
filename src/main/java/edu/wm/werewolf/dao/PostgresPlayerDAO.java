@@ -121,7 +121,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 	public void insertPlayer(Player p) {
 		
 		Connection connection = establishConnection();
-		execQuery(connection, "insert into player (username, is_werewolf, is_dead) values ('" + p.getUserID() + "'," + p.isWerewolf() + ", false);");
+		execQuery(connection, "insert into player (username, is_werewolf, is_dead) values ('" + p.getUsername() + "'," + p.isWerewolf() + ", false);");
 		
 	}
 
@@ -247,7 +247,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 	public double getDistanceBetween(Player first, Player second) throws PlayerNotFoundException, SQLException {
 
 		Connection connection = establishConnection();
-		ResultSet r1 = execQuery(connection, "select lat, lng from player where username='" + first.getUserID() + "';");
+		ResultSet r1 = execQuery(connection, "select lat, lng from player where username='" + first.getUsername() + "';");
 		
 		double firstLat, firstLng, secondLat, secondLng;
 		
@@ -259,7 +259,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 			throw new PlayerNotFoundException();
 
 		
-		ResultSet r2 = execQuery(connection, "select lat, lng from player where username='" + second.getUserID() + "';");
+		ResultSet r2 = execQuery(connection, "select lat, lng from player where username='" + second.getUsername() + "';");
 		
 
 		if (r2.next())  {
@@ -284,7 +284,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 	public void vote(Player voter, Player votingFor) {
 
 		Connection connection = establishConnection();
-		execQuery(connection, "update player set voted_for='" + votingFor.getUserID() + "' where username = '" + voter.getUserID() + "';");
+		execQuery(connection, "update player set voted_for='" + votingFor.getUsername() + "' where username = '" + voter.getUsername() + "';");
 		
 	}
 
@@ -333,6 +333,18 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 			players.add(new Player(r.getString("id"), r.getBoolean("is_dead"), r.getDouble("lat"), r.getDouble("lng"), r.getString("username"), r.getBoolean("is_werewolf"), r.getString("voted_for"), r.getDate("last_update")));
 
 		return players;
+		
+	}
+
+	@Override
+	public void removeInactivePlayers(int interval) {
+		
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		long valid = System.currentTimeMillis() - (interval * 60000);
+		String date = df.format(valid);
+		
+		Connection connection = establishConnection();
+		execQuery(connection, "update player set is_dead=true where last_update < '" + date + "';");
 		
 	}
 

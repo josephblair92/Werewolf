@@ -31,5 +31,6 @@ public interface IPlayerDAO {
 	void logVotes() throws SQLException, NoRemainingPlayersException;
 	List<Player> getAliveWerewolves() throws SQLException;
 	List<Player> getAliveTownspeople() throws SQLException;
+	void removeInactivePlayers(int interval);
 
 }

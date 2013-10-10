@@ -8,7 +8,7 @@ public class Player {
 	private boolean isDead;
 	private double lat;
 	private double lng;
-	private String userID;
+	private String username;
 	private boolean isWerewolf;
 	private String votedFor;
 	private Date lastUpdate;
@@ -25,7 +25,7 @@ public class Player {
 		this.isDead = isDead;
 		this.lat = lat;
 		this.lng = lng;
-		this.userID = userID;
+		this.username = userID;
 		this.isWerewolf = isWerewolf;
 		this.votedFor = votedFor;
 		this.lastUpdate = lastUpdate;
@@ -63,12 +63,12 @@ public class Player {
 		this.lng = lng;
 	}
 
-	public String getUserID() {
-		return userID;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserID(String userID) {
-		this.userID = userID;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public boolean isWerewolf() {

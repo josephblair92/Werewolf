@@ -40,6 +40,13 @@ public class MyUser extends User {
 		score=0;
 	}
 	
+	public MyUser(String username, String password, String firstname, String lastname) {
+		super(username, password, true, true, true, true, Arrays.asList(new GrantedAuthority[] {new SimpleGrantedAuthority("ROLE_USER")}));
+		this.firstname=firstname;
+		this.lastname=lastname;
+		score=0;
+	}
+	
 	public MyUser(String username, String password, Collection<? extends GrantedAuthority> authorities, String firstname, String lastname,
 			String imageURL) {
 		super(username, password, true, true, true, true, authorities);

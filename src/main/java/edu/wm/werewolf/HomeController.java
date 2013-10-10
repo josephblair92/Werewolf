@@ -27,6 +27,7 @@ import edu.wm.werewolf.dao.IUserDAO;
 import edu.wm.werewolf.domain.GPSLocation;
 import edu.wm.werewolf.domain.JsonResponse;
 import edu.wm.werewolf.domain.Player;
+import edu.wm.werewolf.domain.PlayerBasic;
 import edu.wm.werewolf.domain.Score;
 import edu.wm.werewolf.service.GameService;
 import edu.wm.werewolf.service.IUserService;
@@ -64,35 +65,35 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/players/alive", method = RequestMethod.GET)
-	public @ResponseBody List<Player> getAllAlive() {
+	public @ResponseBody List<PlayerBasic> getAllAlive() {
 		
 		if (!gameService.isActive())
 			return null;
 		
-		List<Player> alivePlayers = gameService.getAllAlive();
-		return alivePlayers;
+		return gameService.getAllAlive();
+		
 	}
 	
 	@RequestMapping(value = "/players/nearby", method = RequestMethod.GET)
-	public @ResponseBody List<Player> getAllNearby(Principal principal) {
+	public @ResponseBody List<PlayerBasic> getAllNearby(Principal principal) {
 		
 		if (!gameService.isActive())
 			return null;
 		
 		String username = principal.getName();
 		//logger.info("GET to /players/nearby - getAllNearby(), username: " + username);
-		List<Player> nearbyPlayers = gameService.getAllNearby(username);
+		List<PlayerBasic> nearbyPlayers = gameService.getAllNearby(username);
 		return nearbyPlayers;
 	}
 	
 	@RequestMapping(value = "/players/votable", method = RequestMethod.GET)
-	public @ResponseBody List<Player> getAllVotable() {
+	public @ResponseBody List<PlayerBasic> getAllVotable() {
 		
 		if (!gameService.isActive())
 			return null;
 		
 		//logger.info("GET to /players/votable - getAllVotable()");
-		List<Player> votablePlayers = gameService.getAllVotable();
+		List<PlayerBasic> votablePlayers = gameService.getAllVotable();
 		return votablePlayers;
 	}
 	
@@ -162,8 +163,8 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/newuser", method = RequestMethod.POST)
-	public @ResponseBody JsonResponse newUser(@ModelAttribute("username") String username, @ModelAttribute("password") String password) {
-		if (userService.createUser(username, password))
+	public @ResponseBody JsonResponse newUser(@ModelAttribute("username") String username, @ModelAttribute("password") String password, @ModelAttribute("firstname") String firstname, @ModelAttribute("lastname") String lastname) {
+		if (userService.createUser(username, password, firstname, lastname))
 			return new JsonResponse(true, "Successfully added new user");
 		else
 			return new JsonResponse(false, "Could not create the account.  This username may already be taken.");

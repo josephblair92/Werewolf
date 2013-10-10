@@ -21,6 +21,7 @@ import edu.wm.werewolf.domain.GPSLocation;
 import edu.wm.werewolf.domain.Game;
 import edu.wm.werewolf.domain.JsonResponse;
 import edu.wm.werewolf.domain.Player;
+import edu.wm.werewolf.domain.PlayerBasic;
 import edu.wm.werewolf.domain.Score;
 import edu.wm.werewolf.domain.User;
 import edu.wm.werewolf.exceptions.GameNotFoundException;
@@ -37,9 +38,19 @@ public class GameService {
 	private boolean atNight;
 	private int scentRadius = 800;
 	private int killRadius = 500;
+	private int disqualificationInterval = 30;
 	
-	public List<Player> getAllAlive() {
-		return playerDAO.getAllAlive();
+	public List<PlayerBasic> getAllAlive() {
+		
+		List<Player> players = playerDAO.getAllAlive();
+		List<PlayerBasic> playersBasic = new ArrayList<PlayerBasic>();
+		
+		for (int i = 0; i < players.size(); i++) {
+			User u = userDAO.getUserByUsername(players.get(i).getUsername());
+			playersBasic.add(new PlayerBasic(u.getUsername(), u.getFirstname(), u.getLastname()));
+		}
+		
+		return playersBasic;
 	}
 	
 	public JsonResponse vote(String voterUsername, String votingForUsername) {
@@ -123,7 +134,7 @@ public class GameService {
 		
 	}
 
-	public List<Player> getAllNearby(String username) {
+	public List<PlayerBasic> getAllNearby(String username) {
 
 		Player p;
 		try {
@@ -138,13 +149,30 @@ public class GameService {
 			return null;
 		}
 		
-		return playerDAO.getAllNear(new GPSLocation(p.getLat(), p.getLng()), scentRadius);
+		List<Player> players = playerDAO.getAllNear(new GPSLocation(p.getLat(), p.getLng()), scentRadius);
+		List<PlayerBasic> playersBasic = new ArrayList<PlayerBasic>();
+		
+		for (int i = 0; i < players.size(); i++) {
+			User u = userDAO.getUserByUsername(players.get(i).getUsername());
+			playersBasic.add(new PlayerBasic(u.getUsername(), u.getFirstname(), u.getLastname()));
+		}
+		
+		return playersBasic;
 		
 		
 	}
 
-	public List<Player> getAllVotable() {
-		return playerDAO.getAllAlive();
+	public List<PlayerBasic> getAllVotable() {
+		
+		List<Player> players = playerDAO.getAllAlive();
+		List<PlayerBasic> playersBasic = new ArrayList<PlayerBasic>();
+		
+		for (int i = 0; i < players.size(); i++) {
+			User u = userDAO.getUserByUsername(players.get(i).getUsername());
+			playersBasic.add(new PlayerBasic(u.getUsername(), u.getFirstname(), u.getLastname()));
+		}
+		
+		return playersBasic;
 	}
 
 	public List<Score> getScores() {
@@ -160,7 +188,7 @@ public class GameService {
 		
 		for (int i = 0; i < users.size(); i++) {
 			Player p = new Player();
-			p.setUserID(users.get(i).getUsername());
+			p.setUsername(users.get(i).getUsername());
 			players.add(p);
 		}
 		
@@ -196,7 +224,7 @@ public class GameService {
 		
 		for (int i = 0; i < IDs.size(); i++) {
 			Player p = new Player();
-			p.setUserID(IDs.get(i));
+			p.setUsername(IDs.get(i));
 			players.add(p);
 		}
 		
@@ -234,10 +262,10 @@ public class GameService {
 		
 		//HomeController.logger.info("Checking game operation");
 		
-		if (activeGame == null)
+		if (!isActive())
 			return;
 		
-		//playerDAO.removeInactivePlayers();
+		playerDAO.removeInactivePlayers(disqualificationInterval);
 		
 		if (!atNight && activeGame.atNight()) {
 			HomeController.logger.info("Entering night cycle");
@@ -285,7 +313,7 @@ public class GameService {
 
 		for (int i = 0; i < winners.size(); i++)  {
 			User u = new User();
-			u.setUsername(winners.get(i).getUserID());
+			u.setUsername(winners.get(i).getUsername());
 			userDAO.logWin(u);
 		}
 		

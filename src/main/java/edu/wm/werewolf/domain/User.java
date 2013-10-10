@@ -24,6 +24,15 @@ public class User {
 		this.score = score;
 	}
 	
+	public User(String username, String hashedPassword, String firstname, String lastname) {
+
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.hashedPassword = hashedPassword;
+		this.username = username;
+		this.score = 0;
+	}
+	
 	public User(String username, String password) {
 		this.username=username;
 		this.hashedPassword=password;
