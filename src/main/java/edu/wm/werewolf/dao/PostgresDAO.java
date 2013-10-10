@@ -1,5 +1,7 @@
 package edu.wm.werewolf.dao;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -28,9 +30,20 @@ public class PostgresDAO {
 		 
 		try {
  
-			connection = DriverManager.getConnection(
-					"jdbc:postgresql://127.0.0.1:5432/WEREWOLF", "postgres",
-					"chipman");
+			URI dbUri;
+			try {
+				dbUri = new URI(System.getenv("DATABASE_URL"));
+			} catch (URISyntaxException e) {
+				HomeController.logger.info("Error retrieving DATABASE_URL");
+				e.printStackTrace();
+				return null;
+			}
+
+		    String username = dbUri.getUserInfo().split(":")[0];
+		    String password = dbUri.getUserInfo().split(":")[1];
+		    String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+
+		    connection = DriverManager.getConnection(dbUrl, username, password);
  
 		} catch (SQLException e) {
  
