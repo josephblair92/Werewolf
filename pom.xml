@@ -6,7 +6,9 @@
 	<artifactId>werewolf</artifactId>
 	<name>Werewolf</name>
 	<url>http://maven.apache.org</url>
+	<!-- 
 	<packaging>war</packaging>
+	-->
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
 		<java-version>1.6</java-version>
@@ -26,11 +28,31 @@
 	        <artifactId>tomcat-embed-logging-juli</artifactId>
 	        <version>${tomcat.version}</version>
 	    </dependency>
-	    <dependency>
+	 <dependency>
 	        <groupId>org.apache.tomcat.embed</groupId>
 	        <artifactId>tomcat-embed-jasper</artifactId>
 	        <version>${tomcat.version}</version>
-	    </dependency>
+	 </dependency>
+	 
+	
+	 <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jasper</artifactId>
+        <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jasper-el</artifactId>
+        <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jsp-api</artifactId>
+        <version>${tomcat.version}</version>
+    </dependency>
+  
+    
+    
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -165,7 +187,12 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>3.1.3.RELEASE</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>org.eclipse.jdt.core.compiler</groupId>
+			<artifactId>ecj</artifactId>
+			<version>3.7.2</version>
+		</dependency>
 	</dependencies>
     <build>
         <plugins>
