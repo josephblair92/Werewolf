@@ -293,7 +293,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 		Connection connection = establishConnection();
 		ResultSet r = execQuery(connection, "select * from " +
 				"(select voted_for, count(voted_for) as num_votes from player where is_dead=false and voted_for is not null group by voted_for) a, player b " +
-				"where a.voted_for = b.username and b.is_dead=false order by num_votes;");
+				"where a.voted_for = b.username and b.is_dead=false order by num_votes desc;");
 		connection = establishConnection();
 		
 		String username;
