@@ -27,4 +27,4 @@ Submit a POST request to /restartgame, providing proper user authentication.  A 
 Submit a GET request to /scores to see how many games each user has won.  On success, a JSON serialization of users and their corresponding scores will be returned.  On failure, a null value will be returned.
 
 ###Test scripts
-Run the file script.py included in the root directory.
+Run the file test_script.py included in the root directory.  Note that for the purposes of testing, automatic removal of "inactive" players and automatic switching of day and night has been disabled (this can be done manually by submitting a POST request to /day or /night).  However, these features can easily be re-enabled.
