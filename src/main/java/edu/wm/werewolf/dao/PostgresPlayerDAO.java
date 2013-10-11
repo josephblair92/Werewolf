@@ -258,7 +258,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 		else
 			throw new PlayerNotFoundException();
 
-		
+		connection = establishConnection();
 		ResultSet r2 = execQuery(connection, "select lat, lng from player where username='" + second.getUsername() + "';");
 		
 
@@ -269,7 +269,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 		else
 			throw new PlayerNotFoundException();
 
-		
+		connection = establishConnection();
 		ResultSet r = execQuery(connection, "select ST_Distance('POINT(" + firstLng + " " + firstLat + ")'::geography, 'POINT(" + secondLng + " " + secondLat + ")'::geography) as dist;");
 		
 		if (r.next())
@@ -294,11 +294,13 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 		ResultSet r = execQuery(connection, "select * from " +
 				"(select voted_for, count(voted_for) as num_votes from player where is_dead=false and voted_for is not null group by voted_for) a, player b " +
 				"where a.voted_for = b.username and b.is_dead=false order by num_votes;");
+		connection = establishConnection();
 		
 		String username;
 		if (r.next())  {
 			username = r.getString("username");
 			boolean b = execUpdate(connection, "update player set is_dead=true where username='" + username + "';");
+			connection = establishConnection();
 			boolean c = execUpdate(connection, "update player set voted_for=null;");
 			
 			return b & c & r != null;
