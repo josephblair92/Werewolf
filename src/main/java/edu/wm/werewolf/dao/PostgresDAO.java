@@ -62,30 +62,43 @@ public class PostgresDAO {
 	}
 	
 	public static ResultSet execQuery(Connection con, String query) {
+		Statement stmt = null;
+		ResultSet rs;
 		try {
-			Statement stmt = con.createStatement();
+			stmt = con.createStatement();
 			HomeController.logger.info(query);
-			return stmt.executeQuery(query);
+			rs = stmt.executeQuery(query);
 		}
 		catch (SQLException e) {
 			HomeController.logger.info("Query failed: " + e.getMessage());
-			return null;
+			rs = null;
 		}
+		
+	    try { if (stmt != null) stmt.close(); } catch (Exception e1) {};
+	    try { if (con != null) con.close(); } catch (Exception e2) {};
+		return rs;
 
 		
 	}
 	
 	public static boolean execUpdate(Connection con, String query) {
+		Statement stmt = null;
+		boolean returnVal;
+		
 		try {
-			Statement stmt = con.createStatement();
+			stmt = con.createStatement();
 			HomeController.logger.info(query);
 			stmt.executeUpdate(query);
-			return true;
+			returnVal = true;
 		}
 		catch (SQLException e) {
 			HomeController.logger.info("Query failed: " + e.getMessage());
-			return false;
+			returnVal = false;
 		}
+		
+	    try { if (stmt != null) stmt.close(); } catch (Exception e1) {};
+	    try { if (con != null) con.close(); } catch (Exception e2) {};
+	    return returnVal;
 
 		
 	}
