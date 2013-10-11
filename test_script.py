@@ -181,14 +181,6 @@ if __name__ == '__main__':
     
     lat='33.751'
     lng='-78.821'
-    username='user2'
-    print(username + ' updating location to (' + lat + ', ' + lng + ')')
-    payload={'lat':lat, 'lng':lng}
-    r=requests.post('http://werewolf-jpblair.herokuapp.com/location', auth=(username, 'password'), data=payload)
-    print(r.text + '\n')
-    
-    lat='33.752'
-    lng='-78.822'
     username='user3'
     print(username + ' updating location to (' + lat + ', ' + lng + ')')
     payload={'lat':lat, 'lng':lng}
@@ -219,7 +211,7 @@ if __name__ == '__main__':
     r=requests.post('http://werewolf-jpblair.herokuapp.com/location', auth=(username, 'password'), data=payload)
     print(r.text + '\n')
     
-    input('Let\'s have each player try to get a list of nearby players.  Only werewolves can do this, so for 4 out of the 6 players, the result will simply be blank.  Press enter to continue.\n')
+    input('Let\'s have each player try to get a list of nearby players.  Only werewolves can do this, so for at least 4 out of the 6 players, the result will simply be blank.  The result should be blank for user2, since user2 has already been killed.  Press enter to continue.\n')
     
     username='user1'
     print(username + ' attempting to get all nearby players')
@@ -285,7 +277,7 @@ if __name__ == '__main__':
     r=requests.post('http://werewolf-jpblair.herokuapp.com/restartgame', auth=('user2', 'password'))
     print(r.text + '\n')
     
-    input('We have now restarted the game and all players are alive again.  Let\'s run the game to completion by having one player be voted out each voting cycle.  The game will most likely end before this completes, so the last few requests should return an error.  We will also get the list of alive players after each voting cycle to see it shrink as expected.  Press enter to continue.\n')
+    input('We have now restarted the game and all players are alive again.  Let\'s run the game to completion by having one player be voted out each voting cycle.  We will also get the list of alive players after each voting cycle to see it shrink as expected.  The game will most likely end before this process completes.  Depending on when this happens, the last few lists will be blank and the vote submissions will return an error.  Press enter to continue.\n')
     
     votingfor = 'user1'
     

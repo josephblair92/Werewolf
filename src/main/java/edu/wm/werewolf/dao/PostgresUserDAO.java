@@ -80,7 +80,7 @@ public class PostgresUserDAO extends PostgresDAO implements IUserDAO {
 	@Override
 	public List<Score> getScores() {
 		Connection connection = establishConnection();
-		ResultSet r = execQuery(connection, "select username, score from user_account order by score;");
+		ResultSet r = execQuery(connection, "select username, score from user_account order by score desc;");
 		
 		List<Score> scores = new ArrayList<Score>();
 		
