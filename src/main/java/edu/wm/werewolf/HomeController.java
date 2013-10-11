@@ -147,6 +147,7 @@ public class HomeController {
 		String username = principal.getName();
 		logger.info("username: " + username + " numMinutes: " + numMinutes);
 		JsonResponse response = gameService.newGame(username, Integer.parseInt(numMinutes));
+		gameService.setTesting();
 		return response;
 	}
 	
@@ -168,6 +169,21 @@ public class HomeController {
 			return new JsonResponse(true, "Successfully added new user");
 		else
 			return new JsonResponse(false, "Could not create the account.  This username may already be taken.");
+	}
+	
+	@RequestMapping(value = "/night", method = RequestMethod.POST)
+	public void forceNight() {
+		gameService.forceNight();
+	}
+	
+	@RequestMapping(value = "/day", method = RequestMethod.POST)
+	public void forceDay() {
+		gameService.forceDay();
+	}
+	
+	@RequestMapping(value = "/atnight", method = RequestMethod.GET)
+	public boolean atNight() {
+		return gameService.atNight();
 	}
 
 	

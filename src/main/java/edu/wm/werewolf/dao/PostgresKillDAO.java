@@ -12,10 +12,10 @@ import edu.wm.werewolf.exceptions.PlayerNotFoundException;
 public class PostgresKillDAO extends PostgresDAO implements IKillDAO {
 
 	@Override
-	public void logKill(Kill k) {
+	public boolean logKill(Kill k) {
 
 		Connection connection = establishConnection();
-		ResultSet r = execQuery(connection, "insert into kill (killer_id, victim_id, time, lat, lng) values (" + k.getKillerID() + "," + k.getVictimID() + "," + k.getTimestamp() + "," + k.getLat() + "," + k.getLng() + ");");
+		return execUpdate(connection, "insert into kill (killer_id, victim_id, time, lat, lng) values (" + k.getKillerID() + "," + k.getVictimID() + "," + k.getTimestamp() + "," + k.getLat() + "," + k.getLng() + ");");
 		
 	}
 

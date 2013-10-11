@@ -43,19 +43,19 @@ public class PostgresGameDAO extends PostgresDAO implements IGameDAO {
 	}
 
 	@Override
-	public void newGame(Game g) {
+	public boolean newGame(Game g) {
 		
 		Connection connection = establishConnection();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		execQuery(connection, "insert into game(created_date, day_night_frequency, admin_username) values ('" + df.format(g.getCreatedDate()) + "'," + g.getDayNightFrequency() + ",'" + g.getAdmin() + "');");
+		return execUpdate(connection, "insert into game(created_date, day_night_frequency, admin_username) values ('" + df.format(g.getCreatedDate()) + "'," + g.getDayNightFrequency() + ",'" + g.getAdmin() + "');");
 		
 	}
 
 	@Override
-	public void removeGameByID(String ID) {
+	public boolean removeGameByID(String ID) {
 		
 		Connection connection = establishConnection();
-		execQuery(connection, "delete from game where id=" + ID);
+		return execUpdate(connection, "delete from game where id=" + ID);
 		
 	}
 	

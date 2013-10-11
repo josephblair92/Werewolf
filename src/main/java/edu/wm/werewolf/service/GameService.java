@@ -39,6 +39,11 @@ public class GameService {
 	private int scentRadius = 800;
 	private int killRadius = 500;
 	private int disqualificationInterval = 30;
+	private boolean testingMode = false;
+	
+	public void setTesting() {
+		testingMode = true;
+	}
 	
 	public List<PlayerBasic> getAllAlive() {
 		
@@ -257,8 +262,26 @@ public class GameService {
 		
 	}
 	
+	public void forceNight() {
+		atNight = true;
+		tallyVotes();
+		checkForEndOfGame();
+	}
+	
+	public void forceDay() {
+		atNight = false;
+		checkForEndOfGame();
+	}
+	
+	public boolean atNight() {
+		return atNight;
+	}
+	
 	@Scheduled(fixedRate=5000)
 	public void checkGameOperation() {
+		
+		if (testingMode)
+			return;
 		
 		//HomeController.logger.info("Checking game operation");
 		

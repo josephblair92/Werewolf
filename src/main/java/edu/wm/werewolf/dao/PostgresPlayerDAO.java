@@ -118,51 +118,51 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 	}
 
 	@Override
-	public void insertPlayer(Player p) {
+	public boolean insertPlayer(Player p) {
 		
 		Connection connection = establishConnection();
-		execQuery(connection, "insert into player (username, is_werewolf, is_dead) values ('" + p.getUsername() + "'," + p.isWerewolf() + ", false);");
+		return execUpdate(connection, "insert into player (username, is_werewolf, is_dead) values ('" + p.getUsername() + "'," + p.isWerewolf() + ", false);");
 		
 	}
 
 	@Override
-	public void move(Player p, GPSLocation loc) {
+	public boolean move(Player p, GPSLocation loc) {
 		
 		Connection connection = establishConnection();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		execQuery(connection, "update player set lat=" + loc.getLat() + ", lng=" + loc.getLng() + ", last_update='" + df.format(Calendar.getInstance().getTime()) + "' where id=" + p.getId() + ";");
+		return execUpdate(connection, "update player set lat=" + loc.getLat() + ", lng=" + loc.getLng() + ", last_update='" + df.format(Calendar.getInstance().getTime()) + "' where id=" + p.getId() + ";");
 		
 	}
 
-	public void moveByUsername(String username, GPSLocation loc) {
+	public boolean moveByUsername(String username, GPSLocation loc) {
 		
 		Connection connection = establishConnection();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		execQuery(connection, "update player set lat=" + loc.getLat() + ", lng=" + loc.getLng() + ", last_update='" + df.format(Calendar.getInstance().getTime()) + "' where username='" + username + "';");
+		return execUpdate(connection, "update player set lat=" + loc.getLat() + ", lng=" + loc.getLng() + ", last_update='" + df.format(Calendar.getInstance().getTime()) + "' where username='" + username + "';");
 		
 	}
 	
 	@Override
-	public void setDead(Player victim) {
+	public boolean setDead(Player victim) {
 
 		Connection connection = establishConnection();
-		execQuery(connection, "update player set is_dead=true where id=" + victim.getId() + ";");
+		return execUpdate(connection, "update player set is_dead=true where id=" + victim.getId() + ";");
 		
 	}
 
 	@Override
-	public void deletePlayerByID(String ID) {
+	public boolean deletePlayerByID(String ID) {
 
 		Connection connection = establishConnection();
-		ResultSet r = execQuery(connection, "delete from player where id=" + ID + ";");
+		return execUpdate(connection, "delete from player where id=" + ID + ";");
 		
 	}
 
 	@Override
-	public void deleteAllPlayers() {
+	public boolean deleteAllPlayers() {
 
 		Connection connection = establishConnection();
-		execQuery(connection, "delete from player;");
+		return execUpdate(connection, "delete from player;");
 		
 	}
 
@@ -208,18 +208,18 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 	}
 
 	@Override
-	public void restartGame() {
+	public boolean restartGame() {
 		
 		Connection connection = establishConnection();
-		execQuery(connection, "update player set isdead=false, lat=null, lng=null, is_werewolf=false, last_update=null, voted_for=null;");
+		return execUpdate(connection, "update player set isdead=false, lat=null, lng=null, is_werewolf=false, last_update=null, voted_for=null;");
 		
 	}
 
 	@Override
-	public void setWerewolfByID(String ID) {
+	public boolean setWerewolfByID(String ID) {
 
 		Connection connection = establishConnection();
-		execQuery(connection, "update player set is_werewolf=true where id=" + ID + ";");
+		return execUpdate(connection, "update player set is_werewolf=true where id=" + ID + ";");
 		
 	}
 
@@ -281,15 +281,15 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 	}
 
 	@Override
-	public void vote(Player voter, Player votingFor) {
+	public boolean vote(Player voter, Player votingFor) {
 
 		Connection connection = establishConnection();
-		execQuery(connection, "update player set voted_for='" + votingFor.getUsername() + "' where username = '" + voter.getUsername() + "';");
+		return execUpdate(connection, "update player set voted_for='" + votingFor.getUsername() + "' where username = '" + voter.getUsername() + "';");
 		
 	}
 
 	@Override
-	public void logVotes() throws SQLException, NoRemainingPlayersException {
+	public boolean logVotes() throws SQLException, NoRemainingPlayersException {
 		Connection connection = establishConnection();
 		ResultSet r = execQuery(connection, "select * from " +
 				"(select voted_for, count(voted_for) as num_votes from player where is_dead=false and voted_for is not null group by voted_for) a, player b " +
@@ -298,11 +298,15 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 		String username;
 		if (r.next())  {
 			username = r.getString("username");
-			execQuery(connection, "update player set is_dead=true where username='" + username + "';");
-			execQuery(connection, "update player set voted_for=null;");
+			boolean b = execUpdate(connection, "update player set is_dead=true where username='" + username + "';");
+			boolean c = execUpdate(connection, "update player set voted_for=null;");
+			
+			return b & c & r != null;
+		
 		}
-		else
-			throw new NoRemainingPlayersException();
+		
+		return true;
+
 
 	}
 
@@ -337,14 +341,14 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 	}
 
 	@Override
-	public void removeInactivePlayers(int interval) {
+	public boolean removeInactivePlayers(int interval) {
 		
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		long valid = System.currentTimeMillis() - (interval * 60000);
 		String date = df.format(valid);
 		
 		Connection connection = establishConnection();
-		execQuery(connection, "update player set is_dead=true where last_update < '" + date + "';");
+		return execUpdate(connection, "update player set is_dead=true where last_update < '" + date + "';");
 		
 	}
 

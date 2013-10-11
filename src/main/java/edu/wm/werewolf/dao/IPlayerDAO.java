@@ -17,20 +17,20 @@ public interface IPlayerDAO {
 	//List<Player> getAllTownspeople();
 	List<Player> getAllNear(GPSLocation loc, int distance);
 	List<String> getAllIDs();
-	void insertPlayer(Player p);
-	void deletePlayerByID(String ID);
-	void deleteAllPlayers();
-	void move(Player p, GPSLocation loc);
-	void moveByUsername(String username, GPSLocation loc);
-	void setDead(Player victim);
-	void restartGame();
-	void setWerewolfByID(String ID);
+	boolean insertPlayer(Player p);
+	boolean deletePlayerByID(String ID);
+	boolean deleteAllPlayers();
+	boolean move(Player p, GPSLocation loc);
+	boolean moveByUsername(String username, GPSLocation loc);
+	boolean setDead(Player victim);
+	boolean restartGame();
+	boolean setWerewolfByID(String ID);
 	Player getPlayerByUsername(String username) throws PlayerNotFoundException;
 	double getDistanceBetween(Player first, Player second) throws PlayerNotFoundException, SQLException;
-	void vote(Player voter, Player votingFor);
-	void logVotes() throws SQLException, NoRemainingPlayersException;
+	boolean vote(Player voter, Player votingFor);
+	boolean logVotes() throws SQLException, NoRemainingPlayersException;
 	List<Player> getAliveWerewolves() throws SQLException;
 	List<Player> getAliveTownspeople() throws SQLException;
-	void removeInactivePlayers(int interval);
+	boolean removeInactivePlayers(int interval);
 
 }

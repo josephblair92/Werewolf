@@ -5,7 +5,7 @@ import edu.wm.werewolf.exceptions.KillNotFoundException;
 
 public interface IKillDAO {
 	
-	void logKill (Kill k);
+	boolean logKill (Kill k);
 	Kill getKill(String killerID, String victimID) throws KillNotFoundException;
 
 }
