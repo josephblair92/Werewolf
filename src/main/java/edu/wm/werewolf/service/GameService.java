@@ -34,7 +34,7 @@ public class GameService {
 	@Autowired private IUserDAO userDAO;
 	@Autowired private IKillDAO killDAO;
 	@Autowired private IGameDAO gameDAO;
-	private Game activeGame;
+	private Game activeGame = null;
 	private boolean atNight;
 	private int scentRadius = 800;
 	private int killRadius = 500;
