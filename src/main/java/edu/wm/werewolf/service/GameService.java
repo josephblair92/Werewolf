@@ -154,7 +154,7 @@ public class GameService {
 			return null;
 		}
 		
-		List<Player> players = playerDAO.getAllNear(new GPSLocation(p.getLat(), p.getLng()), scentRadius);
+		List<Player> players = playerDAO.getAllNear(p.getUsername(), new GPSLocation(p.getLat(), p.getLng()), scentRadius);
 		List<PlayerBasic> playersBasic = new ArrayList<PlayerBasic>();
 		
 		for (int i = 0; i < players.size(); i++) {

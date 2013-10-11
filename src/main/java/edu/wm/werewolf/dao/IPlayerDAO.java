@@ -15,7 +15,7 @@ public interface IPlayerDAO {
 	List<Player> getAllAlive();
 	//List<Player> getAllWerewolves();
 	//List<Player> getAllTownspeople();
-	List<Player> getAllNear(GPSLocation loc, int distance);
+	List<Player> getAllNear(String username, GPSLocation loc, int distance);
 	List<String> getAllIDs();
 	boolean insertPlayer(Player p);
 	boolean deletePlayerByID(String ID);

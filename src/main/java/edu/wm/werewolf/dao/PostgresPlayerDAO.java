@@ -99,10 +99,10 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 */
 	
 	@Override
-	public List<Player> getAllNear(GPSLocation loc, int distance) {
+	public List<Player> getAllNear(String username, GPSLocation loc, int distance) {
 		
 		Connection connection = establishConnection();
-		ResultSet r = execQuery(connection, "select * from player where is_dead=false and ST_Distance(('POINT(' || player.lng || ' ' || player.lat || ')')::geography, 'POINT(" + loc.getLng() + " " + loc.getLat() + ")'::geography) < " + distance + ";");
+		ResultSet r = execQuery(connection, "select * from player where is_dead=false and username <>'" + username + "' and earth_distance(ll_to_earth(" + loc.getLat() + ", " + loc.getLng() + "), ll_to_earth(lat, lng)) < " + distance + ";");
 		
 		List<Player> players = new ArrayList<Player>();
 		
@@ -270,7 +270,7 @@ public class PostgresPlayerDAO extends PostgresDAO implements IPlayerDAO {
 			throw new PlayerNotFoundException();
 
 		connection = establishConnection();
-		ResultSet r = execQuery(connection, "select ST_Distance('POINT(" + firstLng + " " + firstLat + ")'::geography, 'POINT(" + secondLng + " " + secondLat + ")'::geography) as dist;");
+		ResultSet r = execQuery(connection, "select earth_distance(ll_to_earth(" + firstLat + ", " + firstLng + "), ll_to_earth(" + secondLat + ", " + secondLng + ")) as dist;");
 		
 		if (r.next())
 			return r.getDouble("dist");
