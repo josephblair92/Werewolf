@@ -246,13 +246,14 @@ public class GameService {
 		}
 		
 		try {
-			gameDAO.restartGameByID(activeGame.getGameID());
+			activeGame = gameDAO.restartGameByID(activeGame.getGameID());
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
 			return new JsonResponse(false, "Error: could not restart game.");
 		}
 		
+		atNight = false;		
 		return new JsonResponse(true, "Successfully restarted the game.");
 	}
 	

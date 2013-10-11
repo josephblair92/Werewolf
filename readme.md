@@ -1,7 +1,7 @@
 # Werewolf Web Service
 
 ####New user creation
-Submit a POST request to /newuser, with the 'username' and 'password' fields filled with the username and password of the new user.  A JsonResponse object will be returned indicating success or failure.
+Submit a POST request to /newuser, with the 'username,' 'password,' 'firstname,' and 'lastname' fields filled as desired.  A JsonResponse object will be returned indicating success or failure.
 
 ####New game creation
 Submit a POST request to /newgame, providing proper user authentication and the field 'numMinutes' filled in with the desired number of minutes for each day and night (note that this value is the length of each, not both combined).  A JsonResponse object will be returned indicating success or failure.  On success, a new game will be started with the user who sent the request set as the admin of the game, adding all users in the database as players and immediately beginning the first day cycle.
@@ -27,3 +27,4 @@ Submit a POST request to /restartgame, providing proper user authentication.  A 
 Submit a GET request to /scores to see how many games each user has won.  On success, a JSON serialization of users and their corresponding scores will be returned.  On failure, a null value will be returned.
 
 ###Test scripts
+Run the file script.py included in the root directory.
