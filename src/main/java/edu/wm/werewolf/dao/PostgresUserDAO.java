@@ -103,7 +103,7 @@ public class PostgresUserDAO extends PostgresDAO implements IUserDAO {
 	public boolean logWin(User u) {
 
 		Connection connection = establishConnection();
-		return execUpdate(connection, "update user set score=score+1 where username='" + u.getUsername() + "';");
+		return execUpdate(connection, "update user_account set score=score+1 where username='" + u.getUsername() + "';");
 		
 	}
 
