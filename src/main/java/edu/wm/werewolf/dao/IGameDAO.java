@@ -11,6 +11,6 @@ public interface IGameDAO {
 	Game getGameByID(String ID) throws GameNotFoundException;
 	boolean removeGameByID(String ID);
 	Game restartGameByID(String ID) throws SQLException, ParseException, GameNotFoundException;
-	boolean newGame(Game g);
+	String newGame(Game g);
 
 }

@@ -210,7 +210,8 @@ public class GameService {
 		
 		atNight = false;		
 		activeGame = new Game(adminUsername, Calendar.getInstance().getTime(), dayNightFrequency, null);
-		gameDAO.newGame(activeGame);
+		String gameID = gameDAO.newGame(activeGame);
+		activeGame.setGameID(gameID);
 		
 		JsonResponse r = new JsonResponse(true, "Sucessfully created new game");
 		return r;
