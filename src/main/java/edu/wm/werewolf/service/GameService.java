@@ -323,6 +323,8 @@ public class GameService {
 
 		int numWerewolves = aliveWerewolves.size();
 		int numTownspeople = aliveTownspeople.size();
+		
+		HomeController.logger.info("Townspeople: " + numTownspeople + " " + "Werewolves: " + numWerewolves);
 	
 		if (numWerewolves == 0)  {
 			gameOver(aliveTownspeople);
