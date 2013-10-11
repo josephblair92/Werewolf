@@ -74,7 +74,7 @@ public class PostgresDAO {
 			rs = null;
 		}
 		
-	    try { if (stmt != null) stmt.close(); } catch (Exception e1) {};
+	    //try { if (stmt != null) stmt.close(); } catch (Exception e1) {};
 	    try { if (con != null) con.close(); } catch (Exception e2) {};
 		return rs;
 
@@ -96,7 +96,7 @@ public class PostgresDAO {
 			returnVal = false;
 		}
 		
-	    try { if (stmt != null) stmt.close(); } catch (Exception e1) {};
+	    //try { if (stmt != null) stmt.close(); } catch (Exception e1) {};
 	    try { if (con != null) con.close(); } catch (Exception e2) {};
 	    return returnVal;
 
